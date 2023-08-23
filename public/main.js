@@ -24,9 +24,9 @@ $(function() {
   function addParticipantsMessage(data) {
     var message = "";
     if (data.numUsers === 1) {
-      message += "1 person on discord";
+      message += "There's only one person in your memory.";
     } else {
-      message += data.numUsers + " people on discord";
+      message += "There is " + data.numUsers + " voices in your memory.";
     }
     log(message);
   }
@@ -99,7 +99,7 @@ $(function() {
   // Adds the visual chat typing message
   function addChatTyping(data) {
     data.typing = true;
-    data.message = "is typing";
+    data.message = "is attempting to speak.";
     addChatMessage(data);
   }
 
@@ -228,7 +228,7 @@ $(function() {
   socket.on("login", function(data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Discord";
+    var message = "Voices";
     log(message, {
       prepend: true
     });
@@ -242,13 +242,13 @@ $(function() {
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on("user joined", function(data) {
-    log(data.username + " opened RizzCord");
+    log(data.username + " has been added to your memory.");
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on("user left", function(data) {
-    log(data.username + " Left");
+    log(data.username + " has been forgetten.");
     addParticipantsMessage(data);
     removeChatTyping(data);
   });
