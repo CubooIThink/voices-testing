@@ -1,50 +1,41 @@
-const loginContainer = document.getElementById('login-container');
-const usernameInput = document.getElementById('username-input');
-const loginButton = document.getElementById('login-button');
-const chatContainer = document.getElementById('chat-container');
-const chatMessages = document.getElementById('chat-messages');
-const messageInput = document.getElementById('message-input');
-const sendButton = document.getElementById('send-button');
+const chatContainer = document.getElementById("chatContainer");
+const usernameInput = document.getElementById("usernameInput");
+const messageInput = document.getElementById("messageInput");
 
-let username = ''; // Will store the username
-
-loginButton.addEventListener('click', () => {
-  const enteredUsername = usernameInput.value.trim();
-  if (enteredUsername !== '') {
-    loginUser(enteredUsername);
+usernameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const username = usernameInput.value.trim();
+    if (username !== "") {
+      usernameInput.style.display = "none";
+      messageInput.style.display = "block";
+      messageInput.focus();
+    }
   }
 });
 
-function loginUser(enteredUsername) {
-  username = enteredUsername;
-  loginContainer.style.display = 'none';
-  chatContainer.style.display = 'block';
-}
-
-const passwordInput = document.getElementById('password-input');
-const passwordButton = document.getElementById('password-button');
-const password = 'LRMSbad';
-
-passwordButton.addEventListener('click', () => {
-  const enteredPassword = passwordInput.value.trim();
-  if (enteredPassword === password) {
-    document.body.classList.add('yellow-name');
+messageInput.addEventListener("keydown", (event) => {
+  if (event.ctrlKey && event.key === "c") {
+    event.preventDefault();
+    document.body.style.fontSize = "larger";
+    document.body.style.color = "yellow";
   }
-  passwordInput.value = ''; // Clear the input field
 });
 
+messageInput.addEventListener("keyup", (event) => {
+  if (!event.ctrlKey || event.key !== "c") {
+    document.body.style.fontSize = "";
+    document.body.style.color = "";
+  }
 
-function sendMessage(username, message) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message');
-  messageElement.textContent = `${username}: ${message}`;
-  chatMessages.appendChild(messageElement);
-}
-
-sendButton.addEventListener('click', () => {
-  const message = messageInput.value;
-  if (message.trim() !== '') {
-    sendMessage(username, message);
-    messageInput.value = '';
+  if (event.key === "Enter") {
+    const message = messageInput.value.trim();
+    if (message !== "") {
+      const messageElement = document.createElement("p");
+      messageElement.textContent = `${usernameInput.value}: ${message}`;
+      chatContainer.appendChild(messageElement);
+      messageInput.value = "";
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
   }
 });
