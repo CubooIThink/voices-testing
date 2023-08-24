@@ -21,17 +21,18 @@ function loginUser(enteredUsername) {
   chatContainer.style.display = 'block';
 }
 
-const passwordKey = 61; // ASCII code for "="
+const passwordInput = document.getElementById('password-input');
+const passwordButton = document.getElementById('password-button');
 const password = 'LRMSbad';
 
-document.addEventListener('keydown', (event) => {
-  if (event.keyCode === passwordKey) {
-    const enteredPassword = prompt('Enter the password:');
-    if (enteredPassword === password) {
-      document.body.classList.add('yellow-name');
-    }
+passwordButton.addEventListener('click', () => {
+  const enteredPassword = passwordInput.value.trim();
+  if (enteredPassword === password) {
+    document.body.classList.add('yellow-name');
   }
+  passwordInput.value = ''; // Clear the input field
 });
+
 
 function sendMessage(username, message) {
   const messageElement = document.createElement('div');
