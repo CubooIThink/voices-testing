@@ -1,20 +1,14 @@
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+// ... (previous code)
 
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  socket.on('chat message', (data) => {
+    io.emit('chat message', data);
+  });
+
+  socket.on('change name', (newName) => {
+    io.emit('change name', newName);
   });
 
   socket.on('disconnect', () => {
@@ -22,6 +16,4 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+// ... (remaining code)
