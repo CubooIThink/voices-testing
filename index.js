@@ -1,51 +1,27 @@
-const chatContainer = document.getElementById("chatContainer");
-const usernameInput = document.getElementById("usernameInput");
-const messageInput = document.getElementById("messageInput");
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 
-let ctrlPressed = false;
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
-usernameInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    const username = usernameInput.value.trim();
-    if (username !== "") {
-      usernameInput.style.display = "none";
-      messageInput.style.display = "block";
-      messageInput.focus();
-    }
-  }
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
 });
 
-messageInput.addEventListener("keydown", (event) => {
-  if (event.key === "Control") {
-    ctrlPressed = true;
-  }
+io.on('connection', (socket) => {
+  console.log('A user connected');
 
-  if (ctrlPressed && event.key === "c") {
-    event.preventDefault();
-    document.body.style.fontSize = "larger";
-    document.body.style.color = "yellow";
-  }
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
 });
 
-messageInput.addEventListener("keyup", (event) => {
-  if (event.key === "Control") {
-    ctrlPressed = false;
-  }
-
-  if (event.key === "Enter") {
-    const message = messageInput.value.trim();
-    if (message !== "") {
-      const messageElement = document.createElement("p");
-      messageElement.textContent = `${usernameInput.value}: ${message}`;
-      chatContainer.appendChild(messageElement);
-      messageInput.value = "";
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-  }
-
-  if (!ctrlPressed) {
-    document.body.style.fontSize = "";
-    document.body.style.color = "";
-  }
+server.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
